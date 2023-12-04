@@ -16,6 +16,9 @@ class DictionaryViewModel:  ViewModel() {
     private val _searchResults = MutableStateFlow<List<Dictionary>>(emptyList())
     val searchResults: StateFlow<List<Dictionary>> = _searchResults.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private lateinit var repository: DictionaryRepository
 
     fun initRepository(repo: DictionaryRepository) {
@@ -23,16 +26,18 @@ class DictionaryViewModel:  ViewModel() {
     }
 
     fun searchWords(query: String) {
+        _isLoading.value = true
         viewModelScope.launch {
             repository.searchWords(query)
                 .collect { results ->
                     _searchResults.value = results
+                    _isLoading.value = false
                     Log.d("DictionaryViewModel", "searchWords: ${results.size}")
                 }
         }
     }
 
-    fun getDictionaryById(id: Long): Flow<Dictionary?>{
-        return repository.getDictionaryById(id)
+    fun getDictionaryByStripWord(word: String): Flow<Dictionary?>{
+        return repository.getDictionaryByStripWord(word)
     }
 }

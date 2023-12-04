@@ -1,6 +1,5 @@
 package com.phyothinzaraung.eng_mm_dictionary.view
 
-import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,9 +15,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,18 +27,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
-fun DetailsScreen(id: Long, viewModel: DictionaryViewModel) {
-    var dictionary by remember { mutableStateOf<Dictionary?>(null) }
+fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel) {
 
-    LaunchedEffect(id) {
-        dictionary = viewModel.getDictionaryById(id).firstOrNull()
-    }
+    val dictionary by viewModel.getDictionaryByStripWord(stripWord).collectAsState(initial = null)
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -96,16 +93,4 @@ fun DetailsScreen(id: Long, viewModel: DictionaryViewModel) {
             }
         }
     }
-}
-
-@Composable
-fun HtmlTextView(htmlContent: String) {
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = { context ->
-            WebView(context).apply {
-                loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
-            }
-        }
-    )
 }

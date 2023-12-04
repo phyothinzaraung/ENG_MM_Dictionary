@@ -56,10 +56,10 @@ class MainActivity : ComponentActivity() {
             }
             composable(
                 route = Screen.DetailsScreen.route,
-                arguments = listOf(navArgument("id") { type = NavType.LongType })
+                arguments = listOf(navArgument("stripWord") { type = NavType.StringType })
             ) { backStackEntry ->
-                val id = backStackEntry.arguments?.getLong("id")
-                DetailsScreen(id = id ?: 0, viewModel = dictionaryViewModel)
+                val stripWord = backStackEntry.arguments?.getString("stripWord")
+                DetailsScreen(stripWord = stripWord ?: "", viewModel = dictionaryViewModel)
             }
         }
     }

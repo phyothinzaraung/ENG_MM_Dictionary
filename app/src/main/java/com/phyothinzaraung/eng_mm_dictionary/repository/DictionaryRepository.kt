@@ -9,7 +9,7 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao) {
         return dictionaryDao.searchWords(searchQuery)
     }
 
-    fun getDictionaryById(id: Long): Flow<Dictionary?>{
-        return dictionaryDao.getDictionaryById(id)
+    fun getDictionaryByStripWord(word: String): Flow<Dictionary?>{
+        return dictionaryDao.getDictionaryByWord(word)
     }
 }
