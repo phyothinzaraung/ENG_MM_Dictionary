@@ -11,10 +11,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.phyothinzaraung.eng_mm_dictionary.data.DictionaryDatabase
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
 import com.phyothinzaraung.eng_mm_dictionary.ui.theme.CustomAppTheme
 import com.phyothinzaraung.eng_mm_dictionary.ui.theme.ENG_MM_DictionaryTheme
+import com.phyothinzaraung.eng_mm_dictionary.view.DetailsScreen
 import com.phyothinzaraung.eng_mm_dictionary.view.SearchScreen
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 
@@ -30,11 +37,34 @@ class MainActivity : ComponentActivity() {
         setContent {
             ENG_MM_DictionaryTheme {
                 CustomAppTheme {
-                    SearchScreen(viewModel = dictionaryViewModel)
+                    val navController = rememberNavController()
+                    NavGraph(navController = navController)
                 }
 
             }
         }
     }
+
+    @Composable
+    fun NavGraph(navController: NavHostController) {
+        NavHost(
+            navController = navController,
+            startDestination = Screen.SearchScreen.route
+        ) {
+            composable(Screen.SearchScreen.route) {
+                SearchScreen(navController = navController, viewModel = dictionaryViewModel)
+            }
+            composable(
+                route = Screen.DetailsScreen.route,
+                arguments = listOf(navArgument("id") { type = NavType.LongType })
+            ) { backStackEntry ->
+                val id = backStackEntry.arguments?.getLong("id")
+                DetailsScreen(id = id ?: 0, viewModel = dictionaryViewModel)
+            }
+        }
+    }
 }
+
+
+
 

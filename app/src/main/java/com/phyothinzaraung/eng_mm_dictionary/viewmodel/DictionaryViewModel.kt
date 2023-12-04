@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,5 +30,9 @@ class DictionaryViewModel:  ViewModel() {
                     Log.d("DictionaryViewModel", "searchWords: ${results.size}")
                 }
         }
+    }
+
+    fun getDictionaryById(id: Long): Flow<Dictionary?>{
+        return repository.getDictionaryById(id)
     }
 }

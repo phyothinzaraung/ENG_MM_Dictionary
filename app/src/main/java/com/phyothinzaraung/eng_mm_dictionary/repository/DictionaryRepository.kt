@@ -8,4 +8,8 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao) {
     fun searchWords(searchQuery: String): Flow<List<Dictionary>> {
         return dictionaryDao.searchWords(searchQuery)
     }
+
+    fun getDictionaryById(id: Long): Flow<Dictionary?>{
+        return dictionaryDao.getDictionaryById(id)
+    }
 }
