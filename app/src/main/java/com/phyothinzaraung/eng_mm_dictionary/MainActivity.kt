@@ -59,7 +59,7 @@ class MainActivity : ComponentActivity() {
                 arguments = listOf(navArgument("stripWord") { type = NavType.StringType })
             ) { backStackEntry ->
                 val stripWord = backStackEntry.arguments?.getString("stripWord")
-                DetailsScreen(stripWord = stripWord ?: "", viewModel = dictionaryViewModel)
+                DetailsScreen(stripWord = stripWord ?: "", viewModel = dictionaryViewModel, navController)
             }
         }
     }
