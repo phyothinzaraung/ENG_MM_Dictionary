@@ -44,7 +44,6 @@ class DictionaryViewModel:  ViewModel() {
 
     fun insertFavorite(favorite: Favorite){
         viewModelScope.launch {
-            Log.d("FAV", "insertFavorite: $favorite")
             repository.insertFavorite(favorite)
         }
     }

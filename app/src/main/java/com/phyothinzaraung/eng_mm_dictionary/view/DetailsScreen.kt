@@ -39,17 +39,19 @@ import androidx.navigation.NavController
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
 fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navController: NavController) {
 
-    val dictionary by viewModel.getDictionaryByStripWord(stripWord).collectAsState(initial = null)
-
-    val favorites by viewModel.getFavorites().collectAsState(initial = emptyList())
-
+    var dictionary by remember { mutableStateOf<Dictionary?>(null) }
+    var favorites by remember { mutableStateOf<List<Favorite>>(emptyList()) }
     var isFavorite by remember { mutableStateOf(false) }
 
-    LaunchedEffect(favorites) {
+    LaunchedEffect(stripWord) {
+        dictionary = viewModel.getDictionaryByStripWord(stripWord).firstOrNull()
+        favorites = viewModel.getFavorites().first()
         isFavorite = favorites.any { it.stripword == stripWord }
     }
 
@@ -149,7 +151,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                             val keywords = dict.keywords!!.split(",").map { it.trim() }
 
                             val chunkedKeywords =
-                                keywords.chunked(5) // Change the number 3 as per your desired column count
+                                keywords.chunked(5)
 
                             chunkedKeywords.forEach { rowKeywords ->
                                 Row(
@@ -179,17 +181,20 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
     }
 }
 
-fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, dictionaryViewModel: DictionaryViewModel) {
-    val favorite = Favorite(
-        dictionary!!.id,
-        dictionary.word,
-        dictionary.stripWord
-    )
-    if(isFavorite){
-        Log.d("Fav", "toggleFavoriteStatus: true")
-        dictionaryViewModel.insertFavorite(favorite)
-    }else{
-        Log.d("Fav", "toggleFavoriteStatus: false")
-        dictionaryViewModel.deleteFavorite(favorite)
+fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, viewModel: DictionaryViewModel) {
+    val favorite = dictionary?.let {
+        Favorite(
+            it.id,
+            it.word,
+            it.stripWord
+        )
+    }
+
+    favorite?.let {
+        if (isFavorite) {
+            viewModel.insertFavorite(favorite)
+        } else {
+            viewModel.deleteFavorite(favorite)
+        }
     }
 }

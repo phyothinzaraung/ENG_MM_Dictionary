@@ -61,7 +61,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     //Room
-    val room_version = "2.6.0"
+    val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     // To use Kotlin annotation processing tool (kapt)
@@ -69,7 +69,7 @@ dependencies {
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$room_version")
     // Jetpack Compose Navigation
-    val nav_version = "2.7.4"
+    val nav_version = "2.7.5"
     implementation("androidx.navigation:navigation-compose:$nav_version")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
