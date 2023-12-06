@@ -2,6 +2,8 @@ package com.phyothinzaraung.eng_mm_dictionary
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedDispatcher
+import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,12 +28,16 @@ import com.phyothinzaraung.eng_mm_dictionary.view.SearchScreen
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 
 class MainActivity : ComponentActivity() {
+
     private val dictionaryViewModel: DictionaryViewModel by viewModels()
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repository = DictionaryRepository(DictionaryDatabase.getInstance(this).dictionaryDao())
+        val repository = DictionaryRepository(
+            DictionaryDatabase.getInstance(this).dictionaryDao(),
+            DictionaryDatabase.getInstance(this).favoriteDao()
+        )
         dictionaryViewModel.initRepository(repository)
         
         setContent {

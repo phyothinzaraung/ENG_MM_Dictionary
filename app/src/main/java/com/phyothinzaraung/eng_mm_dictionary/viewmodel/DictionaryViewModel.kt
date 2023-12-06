@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -39,5 +40,22 @@ class DictionaryViewModel:  ViewModel() {
 
     fun getDictionaryByStripWord(word: String): Flow<Dictionary?>{
         return repository.getDictionaryByStripWord(word)
+    }
+
+    fun insertFavorite(favorite: Favorite){
+        viewModelScope.launch {
+            Log.d("FAV", "insertFavorite: $favorite")
+            repository.insertFavorite(favorite)
+        }
+    }
+
+    fun deleteFavorite(favorite: Favorite){
+        viewModelScope.launch {
+            repository.deleteFavorite(favorite)
+        }
+    }
+
+    fun getFavorites(): Flow<List<Favorite>>{
+        return repository.getFavorites()
     }
 }

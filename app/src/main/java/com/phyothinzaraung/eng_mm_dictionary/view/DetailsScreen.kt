@@ -1,7 +1,8 @@
 package com.phyothinzaraung.eng_mm_dictionary.view
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,14 +13,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.ripple.rememberRipple
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +26,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +36,8 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 
 @Composable
@@ -44,7 +45,13 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
 
     val dictionary by viewModel.getDictionaryByStripWord(stripWord).collectAsState(initial = null)
 
+    val favorites by viewModel.getFavorites().collectAsState(initial = emptyList())
+
     var isFavorite by remember { mutableStateOf(false) }
+
+    LaunchedEffect(favorites) {
+        isFavorite = favorites.any { it.stripword == stripWord }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -52,7 +59,8 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
     ) {
         Column {
             Row(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
 
@@ -74,13 +82,14 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                         } else {
                             android.R.drawable.btn_star_big_off
                         }
-                    ), // Replace with your favorite icon
+                    ),
                     contentDescription = "Favorite",
                     modifier = Modifier
                         .size(36.dp)
-                        .clickable (
+                        .clickable(
                             onClick = {
                                 isFavorite = !isFavorite
+                                toggleFavoriteStatus(isFavorite, dictionary, viewModel)
                             }
                         )
                 )
@@ -167,5 +176,20 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                 }
             }
         }
+    }
+}
+
+fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, dictionaryViewModel: DictionaryViewModel) {
+    val favorite = Favorite(
+        dictionary!!.id,
+        dictionary.word,
+        dictionary.stripWord
+    )
+    if(isFavorite){
+        Log.d("Fav", "toggleFavoriteStatus: true")
+        dictionaryViewModel.insertFavorite(favorite)
+    }else{
+        Log.d("Fav", "toggleFavoriteStatus: false")
+        dictionaryViewModel.deleteFavorite(favorite)
     }
 }
