@@ -54,7 +54,14 @@ class DictionaryViewModel:  ViewModel() {
         }
     }
 
-    fun getFavorites(): Flow<List<Favorite>>{
-        return repository.getFavorites()
+    private val _favorites = MutableStateFlow<List<Favorite>>(emptyList())
+    val favorites: StateFlow<List<Favorite>> = _favorites.asStateFlow()
+
+    fun getFavorites(){
+        viewModelScope.launch {
+            repository.getFavorites().collect{
+                _favorites.value = it
+            }
+        }
     }
 }

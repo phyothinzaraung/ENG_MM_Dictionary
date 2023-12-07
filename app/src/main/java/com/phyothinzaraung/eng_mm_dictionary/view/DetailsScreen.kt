@@ -46,12 +46,12 @@ import kotlinx.coroutines.flow.firstOrNull
 fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navController: NavController) {
 
     var dictionary by remember { mutableStateOf<Dictionary?>(null) }
-    var favorites by remember { mutableStateOf<List<Favorite>>(emptyList()) }
+    val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     var isFavorite by remember { mutableStateOf(false) }
 
     LaunchedEffect(stripWord) {
         dictionary = viewModel.getDictionaryByStripWord(stripWord).firstOrNull()
-        favorites = viewModel.getFavorites().first()
+        viewModel.getFavorites()
         isFavorite = favorites.any { it.stripword == stripWord }
     }
 

@@ -6,6 +6,8 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,18 +20,22 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.findNavController
 import androidx.navigation.navArgument
 import com.phyothinzaraung.eng_mm_dictionary.data.DictionaryDatabase
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
 import com.phyothinzaraung.eng_mm_dictionary.ui.theme.CustomAppTheme
 import com.phyothinzaraung.eng_mm_dictionary.ui.theme.ENG_MM_DictionaryTheme
 import com.phyothinzaraung.eng_mm_dictionary.view.DetailsScreen
+import com.phyothinzaraung.eng_mm_dictionary.view.FavoritesScreen
+import com.phyothinzaraung.eng_mm_dictionary.view.RecentScreen
 import com.phyothinzaraung.eng_mm_dictionary.view.SearchScreen
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 
 class MainActivity : ComponentActivity() {
 
     private val dictionaryViewModel: DictionaryViewModel by viewModels()
+    private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +49,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ENG_MM_DictionaryTheme {
                 CustomAppTheme {
-                    val navController = rememberNavController()
+                    navController = rememberNavController()
                     NavGraph(navController = navController)
                 }
 
@@ -66,6 +72,25 @@ class MainActivity : ComponentActivity() {
             ) { backStackEntry ->
                 val stripWord = backStackEntry.arguments?.getString("stripWord")
                 DetailsScreen(stripWord = stripWord ?: "", viewModel = dictionaryViewModel, navController)
+            }
+            composable(Screen.FavoritesScreen.route){
+                FavoritesScreen(viewModel = dictionaryViewModel,navController)
+            }
+            composable(Screen.RecentScreen.route){
+                RecentScreen(navController)
+            }
+        }
+    }
+
+    override fun onBackPressed() {
+        if (navController.currentBackStackEntry?.destination?.route == Screen.SearchScreen.route) {
+            // Exit the app only if the current screen is the SearchScreen
+            super.onBackPressed()
+        } else {
+            // Navigate to SearchScreen to exit the app
+            navController.navigate(Screen.SearchScreen.route) {
+                popUpTo(navController.graph.startDestinationId)
+                launchSingleTop = true
             }
         }
     }
