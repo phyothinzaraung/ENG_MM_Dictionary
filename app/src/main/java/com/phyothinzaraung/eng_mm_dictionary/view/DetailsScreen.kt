@@ -1,9 +1,10 @@
 package com.phyothinzaraung.eng_mm_dictionary.view
 
-import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -40,7 +40,6 @@ import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
@@ -49,6 +48,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
     var dictionary by remember { mutableStateOf<Dictionary?>(null) }
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     var isFavorite by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(stripWord) {
         dictionary = viewModel.getDictionaryByStripWord(stripWord).firstOrNull()
@@ -91,6 +91,8 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                     modifier = Modifier
                         .size(36.dp)
                         .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
                             onClick = {
                                 isFavorite = !isFavorite
                                 toggleFavoriteStatus(isFavorite, dictionary, viewModel)
@@ -129,8 +131,8 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                             ) {
                                 Text(
                                     text = "${dict.synonym}",
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    modifier = Modifier.padding(bottom = 8.dp)
+                                    modifier = Modifier.padding(bottom = 8.dp),
+                                    fontSize = 16.sp
                                 )
                             }
                         }
@@ -153,7 +155,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                             val keywords = dict.keywords!!.split(",").map { it.trim() }
 
                             val chunkedKeywords =
-                                keywords.chunked(5)
+                                keywords.chunked(4)
 
                             chunkedKeywords.forEach { rowKeywords ->
                                 Row(
@@ -168,7 +170,8 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                                             },
                                             style = TextStyle(
                                                 color = Color.Blue,
-                                                textDecoration = TextDecoration.Underline
+                                                textDecoration = TextDecoration.Underline,
+                                                fontSize = 16.sp
                                             ),
                                             modifier = Modifier.padding(4.dp)
                                         )

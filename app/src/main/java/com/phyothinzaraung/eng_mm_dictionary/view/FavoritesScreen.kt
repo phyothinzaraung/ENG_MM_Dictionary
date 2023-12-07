@@ -15,15 +15,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
-import kotlinx.coroutines.flow.first
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,11 +48,23 @@ fun FavoritesScreen(viewModel: DictionaryViewModel, navController: NavHostContro
                 ),
                 modifier = Modifier.padding(16.dp)
             )
-            
-            LazyColumn {
-                items(favorites){item: Favorite ->  
-                    FavoriteItem(favorite = item){
-                        navController.navigate("details/${item.stripword}")
+
+            if (favorites.isEmpty()){
+                Text(
+                    text = "No favorites available",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = Color.Gray
+                    ),
+                    modifier = Modifier.padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }else{
+                LazyColumn {
+                    items(favorites){item: Favorite ->
+                        FavoriteItem(favorite = item){
+                            navController.navigate("details/${it.stripword}")
+                        }
                     }
                 }
             }
@@ -62,15 +74,11 @@ fun FavoritesScreen(viewModel: DictionaryViewModel, navController: NavHostContro
 
 @Composable
 fun FavoriteItem(favorite: Favorite, onItemClick: (Favorite) -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onItemClick }
-    ) {
+    ListItem(item = favorite, onItemClick = onItemClick) {
         Text(
-            text = favorite.stripword ?: "",
-            modifier = Modifier.padding(16.dp)
-        )
+            text = it.stripword ?: "",
+            modifier = Modifier.padding(start = 16.dp),
+            fontSize = 16.sp
+            )
     }
 }

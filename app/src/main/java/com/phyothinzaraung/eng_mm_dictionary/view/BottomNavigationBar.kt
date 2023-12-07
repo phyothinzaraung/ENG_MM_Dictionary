@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomAppBar
@@ -50,7 +51,7 @@ fun BottomNavigationBar(navController: NavHostController, currentRoute: String?)
                     launchSingleTop = true
                 }
                           },
-                icon = { Icon(imageVector = Icons.Default.Favorite, contentDescription = null) },
+                icon = { Icon(imageVector = Icons.Default.FavoriteBorder, contentDescription = null) },
                 label = { Text(text = "Favorites") }
             )
 

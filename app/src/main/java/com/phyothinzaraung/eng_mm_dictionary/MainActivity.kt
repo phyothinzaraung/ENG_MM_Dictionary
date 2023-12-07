@@ -2,25 +2,14 @@ package com.phyothinzaraung.eng_mm_dictionary
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedDispatcher
-import androidx.activity.OnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.findNavController
 import androidx.navigation.navArgument
 import com.phyothinzaraung.eng_mm_dictionary.data.DictionaryDatabase
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
@@ -29,6 +18,7 @@ import com.phyothinzaraung.eng_mm_dictionary.ui.theme.ENG_MM_DictionaryTheme
 import com.phyothinzaraung.eng_mm_dictionary.view.DetailsScreen
 import com.phyothinzaraung.eng_mm_dictionary.view.FavoritesScreen
 import com.phyothinzaraung.eng_mm_dictionary.view.RecentScreen
+import com.phyothinzaraung.eng_mm_dictionary.view.Screen
 import com.phyothinzaraung.eng_mm_dictionary.view.SearchScreen
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 

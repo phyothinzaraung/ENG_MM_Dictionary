@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
@@ -93,22 +94,15 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
             }
         }
     }
-
-
 }
 
 @Composable
 fun DictionaryItem(dictionary: Dictionary, onItemClick: (Dictionary) -> Unit) {
-    Card (
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable { onItemClick(dictionary) }
-    ) {
+    ListItem(item = dictionary, onItemClick = onItemClick) {
         Text(
-            text = dictionary.stripWord ?: "",
-            modifier = Modifier
-                .padding(16.dp)
-        )
+            text = it.stripWord ?: "",
+            modifier = Modifier.padding(start = 16.dp),
+            fontSize = 16.sp
+            )
     }
 }
