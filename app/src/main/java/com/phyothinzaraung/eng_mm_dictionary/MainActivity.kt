@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
 
         val repository = DictionaryRepository(
             DictionaryDatabase.getInstance(this).dictionaryDao(),
-            DictionaryDatabase.getInstance(this).favoriteDao()
+            DictionaryDatabase.getInstance(this).favoriteDao(),
+            DictionaryDatabase.getInstance(this).recentDao()
         )
         dictionaryViewModel.initRepository(repository)
         
@@ -77,20 +78,7 @@ class MainActivity : ComponentActivity() {
                 FavoritesScreen(viewModel = dictionaryViewModel,navController)
             }
             composable(Screen.RecentScreen.route){
-                RecentScreen(navController)
-            }
-        }
-    }
-
-    override fun onBackPressed() {
-        if (navController.currentBackStackEntry?.destination?.route == Screen.SearchScreen.route) {
-            // Exit the app only if the current screen is the SearchScreen
-            super.onBackPressed()
-        } else {
-            // Navigate to SearchScreen to exit the app
-            navController.navigate(Screen.SearchScreen.route) {
-                popUpTo(navController.graph.startDestinationId)
-                launchSingleTop = true
+                RecentScreen(viewModel = dictionaryViewModel, navController)
             }
         }
     }

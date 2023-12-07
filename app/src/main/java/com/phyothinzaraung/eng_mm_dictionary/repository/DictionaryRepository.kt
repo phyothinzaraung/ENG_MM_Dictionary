@@ -4,9 +4,14 @@ import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.DictionaryDao
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.data.FavoriteDao
+import com.phyothinzaraung.eng_mm_dictionary.data.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.RecentDao
 import kotlinx.coroutines.flow.Flow
 
-class DictionaryRepository(private val dictionaryDao: DictionaryDao, private val favoriteDao: FavoriteDao) {
+class DictionaryRepository(
+    private val dictionaryDao: DictionaryDao,
+    private val favoriteDao: FavoriteDao,
+    private val recentDao: RecentDao) {
     fun searchWords(searchQuery: String): Flow<List<Dictionary>> {
         return dictionaryDao.searchWords(searchQuery)
     }
@@ -25,5 +30,17 @@ class DictionaryRepository(private val dictionaryDao: DictionaryDao, private val
 
     fun getFavorites(): Flow<List<Favorite>>{
         return favoriteDao.getFavorites()
+    }
+
+    suspend fun insertRecent(recent: Recent){
+        recentDao.insert(recent)
+    }
+
+    fun getRecent(): Flow<List<Recent>>{
+        return recentDao.getRecent()
+    }
+
+    fun clearAllRecent(){
+        recentDao.clearRecent()
     }
 }

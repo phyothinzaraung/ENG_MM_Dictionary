@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
@@ -53,6 +54,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
         dictionary = viewModel.getDictionaryByStripWord(stripWord).firstOrNull()
         viewModel.getFavorites()
         isFavorite = favorites.any { it.stripword == stripWord }
+        addRecent(dictionary, viewModel)
     }
 
     Surface(
@@ -196,5 +198,19 @@ fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, viewModel
         } else {
             viewModel.deleteFavorite(favorite)
         }
+    }
+}
+
+fun addRecent(dictionary: Dictionary?, viewModel: DictionaryViewModel){
+    val recent = dictionary?.let {
+        Recent(
+            it.id,
+            it.word,
+            it.stripWord
+        )
+    }
+
+    recent?.let {
+        viewModel.insertRecent(recent = recent)
     }
 }

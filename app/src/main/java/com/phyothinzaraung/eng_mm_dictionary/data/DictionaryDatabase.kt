@@ -7,11 +7,13 @@ import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-@Database(entities = [Dictionary::class, Favorite::class], version = 2, exportSchema = false)
+@Database(entities = [Dictionary::class, Favorite::class, Recent::class], version = 2, exportSchema = false)
 abstract class DictionaryDatabase: RoomDatabase() {
 
     abstract fun dictionaryDao(): DictionaryDao
     abstract fun favoriteDao(): FavoriteDao
+
+    abstract fun recentDao(): RecentDao
 
     companion object{
         private const val DB_NAME = "dictionary.db"
@@ -22,6 +24,9 @@ abstract class DictionaryDatabase: RoomDatabase() {
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("""CREATE TABLE IF NOT EXISTS `favorite` 
+                        (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `word` TEXT, `stripword` TEXT)""")
+
+                database.execSQL("""CREATE TABLE IF NOT EXISTS `recent` 
                         (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `word` TEXT, `stripword` TEXT)""")
             }
         }
