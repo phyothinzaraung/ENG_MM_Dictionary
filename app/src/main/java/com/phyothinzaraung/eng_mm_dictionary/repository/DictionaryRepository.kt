@@ -7,8 +7,9 @@ import com.phyothinzaraung.eng_mm_dictionary.data.FavoriteDao
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.data.RecentDao
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class DictionaryRepository(
+class DictionaryRepository @Inject constructor(
     private val dictionaryDao: DictionaryDao,
     private val favoriteDao: FavoriteDao,
     private val recentDao: RecentDao) {

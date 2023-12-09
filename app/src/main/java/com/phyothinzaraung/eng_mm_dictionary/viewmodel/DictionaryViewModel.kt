@@ -7,26 +7,22 @@ import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DictionaryViewModel:  ViewModel() {
+@HiltViewModel
+class DictionaryViewModel @Inject constructor(private val repository: DictionaryRepository):  ViewModel() {
 
     private val _searchResults = MutableStateFlow<List<Dictionary>>(emptyList())
     val searchResults: StateFlow<List<Dictionary>> = _searchResults.asStateFlow()
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    private lateinit var repository: DictionaryRepository
-
-    fun initRepository(repo: DictionaryRepository) {
-        repository = repo
-    }
 
     fun searchWords(query: String) {
         _isLoading.value = true

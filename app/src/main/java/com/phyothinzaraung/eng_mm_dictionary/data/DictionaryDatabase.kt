@@ -21,12 +21,12 @@ abstract class DictionaryDatabase: RoomDatabase() {
         @Volatile
         private var INSTANCE: DictionaryDatabase? = null
 
-        val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
-                database.execSQL("""CREATE TABLE IF NOT EXISTS `favorite` 
+        private val MIGRATION_1_2 = object : Migration(1, 2) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("""CREATE TABLE IF NOT EXISTS `favorite` 
                         (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `word` TEXT, `stripword` TEXT)""")
 
-                database.execSQL("""CREATE TABLE IF NOT EXISTS `recent` 
+                db.execSQL("""CREATE TABLE IF NOT EXISTS `recent` 
                         (`_id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `word` TEXT, `stripword` TEXT)""")
             }
         }
