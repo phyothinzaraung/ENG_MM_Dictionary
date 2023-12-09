@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen(viewModel: DictionaryViewModel, navController: NavHostController) {
+fun FavoritesScreen(viewModel: FavoriteViewModel, navController: NavHostController) {
 
     val favorites by viewModel.favorites.collectAsState(initial = emptyList())
     LaunchedEffect(key1 = Unit){

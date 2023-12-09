@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -38,51 +36,5 @@ class DictionaryViewModel @Inject constructor(private val repository: Dictionary
 
     fun getDictionaryByStripWord(word: String): Flow<Dictionary?>{
         return repository.getDictionaryByStripWord(word)
-    }
-
-    fun insertFavorite(favorite: Favorite){
-        viewModelScope.launch {
-            repository.insertFavorite(favorite)
-        }
-    }
-
-    fun deleteFavorite(favorite: Favorite){
-        viewModelScope.launch {
-            repository.deleteFavorite(favorite)
-        }
-    }
-
-    private val _favorites = MutableStateFlow<List<Favorite>>(emptyList())
-    val favorites: StateFlow<List<Favorite>> = _favorites.asStateFlow()
-
-    fun getFavorites(){
-        viewModelScope.launch {
-            repository.getFavorites().collect{
-                _favorites.value = it
-            }
-        }
-    }
-
-    fun insertRecent(recent: Recent){
-        viewModelScope.launch {
-            repository.insertRecent(recent = recent)
-        }
-    }
-
-    fun clearAllRecent(){
-        viewModelScope.launch {
-            repository.clearAllRecent()
-        }
-    }
-
-    private val _recent = MutableStateFlow<List<Recent>>(emptyList())
-    val recent: StateFlow<List<Recent>> = _recent
-
-    fun getRecent(){
-        viewModelScope.launch{
-            repository.getRecent().collect{
-                _recent.value = it
-            }
-        }
     }
 }

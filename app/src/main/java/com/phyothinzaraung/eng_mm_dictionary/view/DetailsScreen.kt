@@ -37,21 +37,28 @@ import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.RecentViewModel
 import kotlinx.coroutines.flow.firstOrNull
 
 @Composable
-fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navController: NavController) {
+fun DetailsScreen(
+    stripWord: String,
+    dictionaryViewModel: DictionaryViewModel,
+    favoriteViewModel: FavoriteViewModel,
+    recentViewModel: RecentViewModel,
+    navController: NavController) {
 
     var dictionary by remember { mutableStateOf<Dictionary?>(null) }
-    val favorites by viewModel.favorites.collectAsState(initial = emptyList())
+    val favorites by favoriteViewModel.favorites.collectAsState(initial = emptyList())
     var isFavorite by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(stripWord) {
-        dictionary = viewModel.getDictionaryByStripWord(stripWord).firstOrNull()
-        viewModel.getFavorites()
+        dictionary = dictionaryViewModel.getDictionaryByStripWord(stripWord).firstOrNull()
+        favoriteViewModel.getFavorites()
         isFavorite = favorites.any { it.stripword == stripWord }
-        addRecent(dictionary, viewModel)
+        addRecent(dictionary, recentViewModel)
     }
 
     Surface(
@@ -92,7 +99,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
                             indication = null,
                             onClick = {
                                 isFavorite = !isFavorite
-                                toggleFavoriteStatus(isFavorite, dictionary, viewModel)
+                                toggleFavoriteStatus(isFavorite, dictionary, favoriteViewModel)
                             }
                         )
                 )
@@ -183,7 +190,7 @@ fun DetailsScreen(stripWord: String, viewModel: DictionaryViewModel, navControll
     }
 }
 
-fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, viewModel: DictionaryViewModel) {
+fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, viewModel: FavoriteViewModel) {
     val favorite = dictionary?.let {
         Favorite(
             it.id,
@@ -201,7 +208,7 @@ fun toggleFavoriteStatus(isFavorite: Boolean, dictionary: Dictionary?, viewModel
     }
 }
 
-fun addRecent(dictionary: Dictionary?, viewModel: DictionaryViewModel){
+fun addRecent(dictionary: Dictionary?, viewModel: RecentViewModel){
     val recent = dictionary?.let {
         Recent(
             it.id,

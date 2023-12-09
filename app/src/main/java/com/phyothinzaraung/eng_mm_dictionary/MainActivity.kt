@@ -19,12 +19,17 @@ import com.phyothinzaraung.eng_mm_dictionary.view.RecentScreen
 import com.phyothinzaraung.eng_mm_dictionary.view.Screen
 import com.phyothinzaraung.eng_mm_dictionary.view.SearchScreen
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.RecentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val dictionaryViewModel: DictionaryViewModel by viewModels()
+    private val recentViewModel: RecentViewModel by viewModels()
+    private val favoriteViewModel: FavoriteViewModel by viewModels()
     private lateinit var navController: NavHostController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +60,18 @@ class MainActivity : ComponentActivity() {
                 arguments = listOf(navArgument("stripWord") { type = NavType.StringType })
             ) { backStackEntry ->
                 val stripWord = backStackEntry.arguments?.getString("stripWord")
-                DetailsScreen(stripWord = stripWord ?: "", viewModel = dictionaryViewModel, navController)
+                DetailsScreen(
+                    stripWord = stripWord ?: "",
+                    dictionaryViewModel = dictionaryViewModel,
+                    favoriteViewModel = favoriteViewModel,
+                    recentViewModel = recentViewModel,
+                    navController = navController)
             }
             composable(Screen.FavoritesScreen.route){
-                FavoritesScreen(viewModel = dictionaryViewModel,navController)
+                FavoritesScreen(viewModel = favoriteViewModel,navController)
             }
             composable(Screen.RecentScreen.route){
-                RecentScreen(viewModel = dictionaryViewModel, navController)
+                RecentScreen(viewModel = recentViewModel, navController)
             }
         }
     }

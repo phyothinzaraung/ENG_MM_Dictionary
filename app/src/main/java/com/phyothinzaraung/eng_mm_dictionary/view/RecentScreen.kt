@@ -20,11 +20,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
-import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
+import com.phyothinzaraung.eng_mm_dictionary.viewmodel.RecentViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RecentScreen(viewModel: DictionaryViewModel, navController: NavHostController) {
+fun RecentScreen(viewModel: RecentViewModel, navController: NavHostController) {
 
     val recent by viewModel.recent.collectAsState(emptyList())
     LaunchedEffect(key1 = recent){
