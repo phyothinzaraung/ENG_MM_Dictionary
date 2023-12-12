@@ -16,5 +16,5 @@ interface RecentDao {
     fun getRecent(): Flow<List<Recent>>
 
     @Query("DELETE FROM recent")
-    fun clearRecent()
+    suspend fun clearRecent()
 }

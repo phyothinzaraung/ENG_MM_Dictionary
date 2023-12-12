@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -53,6 +54,7 @@ fun DetailsScreen(
     val favorites by favoriteViewModel.favorites.collectAsState(initial = emptyList())
     var isFavorite by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
 
     LaunchedEffect(stripWord) {
         dictionary = dictionaryViewModel.getDictionaryByStripWord(stripWord).firstOrNull()
@@ -71,7 +73,6 @@ fun DetailsScreen(
                     .fillMaxWidth()
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
-
             ) {
                 Text(
                     text = stripWord,
@@ -100,6 +101,28 @@ fun DetailsScreen(
                             onClick = {
                                 isFavorite = !isFavorite
                                 toggleFavoriteStatus(isFavorite, dictionary, favoriteViewModel)
+                            }
+                        )
+                )
+
+                Image(
+                    painter = painterResource(id = android.R.drawable.ic_btn_speak_now),
+                    contentDescription = "Speak",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null,
+                            onClick = {
+
+                                dictionary?.let {
+                                    it.stripWord?.let { it1 ->
+                                        dictionaryViewModel.textToSpeech(
+                                            context,
+                                            it1
+                                        )
+                                    }
+                                }
                             }
                         )
                 )

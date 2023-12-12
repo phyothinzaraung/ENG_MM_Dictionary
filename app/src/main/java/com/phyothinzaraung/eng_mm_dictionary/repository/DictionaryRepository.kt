@@ -41,7 +41,7 @@ class DictionaryRepository @Inject constructor(
         return recentDao.getRecent()
     }
 
-    fun clearAllRecent(){
+    suspend fun clearAllRecent(){
         recentDao.clearRecent()
     }
 }
