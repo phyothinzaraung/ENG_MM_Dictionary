@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.phyothinzaraung.eng_mm_dictionary.R
 import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
@@ -105,16 +107,15 @@ fun DetailsScreen(
                         )
                 )
 
+                Spacer(modifier = Modifier.padding(4.dp))
+
                 Image(
-                    painter = painterResource(id = android.R.drawable.ic_btn_speak_now),
+                    painter = painterResource(id = R.drawable.volume),
                     contentDescription = "Speak",
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(32.dp)
                         .clickable(
-                            interactionSource = interactionSource,
-                            indication = null,
                             onClick = {
-
                                 dictionary?.let {
                                     it.stripWord?.let { it1 ->
                                         dictionaryViewModel.textToSpeech(
