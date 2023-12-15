@@ -72,7 +72,6 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
     val trailingIconView = @Composable {
         IconButton(
             onClick = {
-                      //getSpeechInput(context = context, speechToText)
                       launchSpeechToText()
             },
         ) {
