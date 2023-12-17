@@ -3,7 +3,7 @@ package com.phyothinzaraung.eng_mm_dictionary.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phyothinzaraung.eng_mm_dictionary.data.Recent
-import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
+import com.phyothinzaraung.eng_mm_dictionary.repository.IDictionaryRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RecentViewModel @Inject constructor(private val repository: DictionaryRepository): ViewModel() {
+class RecentViewModel @Inject constructor(private val repository: IDictionaryRepository): ViewModel() {
 
     fun insertRecent(recent: Recent){
         viewModelScope.launch {
