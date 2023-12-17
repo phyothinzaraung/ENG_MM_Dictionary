@@ -45,7 +45,7 @@
 
   <h2>Contact</h2>
 
-  <p>For any questions or suggestions, feel free to contact the maintainers:<br>
+  <p>For any questions or suggestions, feel free to contact me:<br>
     <a href="mailto:phyothinzarr.aung@gmail.com">Phyo Thinzar Aung</a></p>
 
 </body>
