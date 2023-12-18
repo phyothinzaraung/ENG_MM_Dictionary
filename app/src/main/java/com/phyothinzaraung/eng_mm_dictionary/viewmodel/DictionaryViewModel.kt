@@ -21,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DictionaryViewModel @Inject constructor(
     private val repository: IDictionaryRepository,
+    private val dispatcherProvider: DispatcherProvider
 ) : ViewModel() {
 
     private val _searchResults = MutableStateFlow<List<Dictionary>>(emptyList())
@@ -33,7 +34,7 @@ class DictionaryViewModel @Inject constructor(
 
     fun searchWords(query: String) {
         _isLoading.value = true
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io) {
             repository.searchWords(query)
                 .collectLatest { results ->
                     _searchResults.value = results

@@ -34,11 +34,12 @@ class DictionaryViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        dictionaryViewModel = DictionaryViewModel(
-            repository = dictionaryRepository,
-        )
         dispatcherProvider = TestDispatcherProvider()
         Dispatchers.setMain(dispatcherProvider.io)
+        dictionaryViewModel = DictionaryViewModel(
+            repository = dictionaryRepository,
+            dispatcherProvider = dispatcherProvider
+        )
     }
 
     @After
@@ -49,7 +50,7 @@ class DictionaryViewModelTest {
     @Test
     fun testSearchWords() = runTest {
         val query = "test"
-        val testResults = listOf<Dictionary>(
+        val testResults = listOf(
             Dictionary(1, "test", "test", "test", "test", "test")
         )
 

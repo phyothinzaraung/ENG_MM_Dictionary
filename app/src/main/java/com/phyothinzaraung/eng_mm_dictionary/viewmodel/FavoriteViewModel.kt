@@ -18,29 +18,27 @@ import javax.inject.Inject
 @HiltViewModel
 class FavoriteViewModel @Inject constructor(
     private val repository: IFavoriteRepository,
+    private val dispatcherProvider: DispatcherProvider
 ) :
     ViewModel() {
     fun insertFavorite(favorite: Favorite) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io) {
             repository.insertFavorite(favorite)
         }
     }
 
     fun deleteFavorite(favorite: Favorite) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcherProvider.io) {
             repository.deleteFavorite(favorite)
         }
     }
 
-//    fun getFavorites() =
-//        repository.getFavorites().flowOn(dispatcherProvider.io)
-
     private val _favorites = MutableStateFlow<List<Favorite>>(emptyList())
     val favorites: StateFlow<List<Favorite>> = _favorites.asStateFlow()
 
-    fun getFavorites(){
-        viewModelScope.launch {
-            repository.getFavorites().collectLatest{
+    fun getFavorites() {
+        viewModelScope.launch(dispatcherProvider.io) {
+            repository.getFavorites().collectLatest {
                 _favorites.value = it
             }
         }

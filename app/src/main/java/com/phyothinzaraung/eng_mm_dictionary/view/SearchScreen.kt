@@ -3,6 +3,7 @@ package com.phyothinzaraung.eng_mm_dictionary.view
 import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -88,6 +89,7 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
     }
 
     LaunchedEffect(key1 = searchQuery) {
+        Log.e(">>> ", searchQuery)
         if (searchQuery.isNotBlank()) {
             viewModel.searchWords(searchQuery)
         }

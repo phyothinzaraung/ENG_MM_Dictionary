@@ -34,9 +34,10 @@ class RecentViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        recentViewModel = RecentViewModel(repository)
         dispatcherProvider = TestDispatcherProvider()
         Dispatchers.setMain(dispatcherProvider.io)
+        recentViewModel = RecentViewModel(repository, dispatcherProvider)
+
     }
 
     @Test

@@ -34,9 +34,9 @@ class FavoriteViewModelTest {
     @Before
     fun setup() {
         MockitoAnnotations.openMocks(this)
-        favoriteViewModel = FavoriteViewModel(repository)
         dispatcherProvider = TestDispatcherProvider()
         Dispatchers.setMain(dispatcherProvider.io)
+        favoriteViewModel = FavoriteViewModel(repository, dispatcherProvider)
     }
 
     @Test
