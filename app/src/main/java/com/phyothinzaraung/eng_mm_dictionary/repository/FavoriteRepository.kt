@@ -1,7 +1,7 @@
 package com.phyothinzaraung.eng_mm_dictionary.repository
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.data.FavoriteDao
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.dao.FavoriteDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

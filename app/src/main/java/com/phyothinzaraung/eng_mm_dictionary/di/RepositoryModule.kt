@@ -1,8 +1,8 @@
 package com.phyothinzaraung.eng_mm_dictionary.di
 
-import com.phyothinzaraung.eng_mm_dictionary.data.DictionaryDao
-import com.phyothinzaraung.eng_mm_dictionary.data.FavoriteDao
-import com.phyothinzaraung.eng_mm_dictionary.data.RecentDao
+import com.phyothinzaraung.eng_mm_dictionary.data.dao.DictionaryDao
+import com.phyothinzaraung.eng_mm_dictionary.data.dao.FavoriteDao
+import com.phyothinzaraung.eng_mm_dictionary.data.dao.RecentDao
 import com.phyothinzaraung.eng_mm_dictionary.repository.DictionaryRepository
 import com.phyothinzaraung.eng_mm_dictionary.repository.FavoriteRepository
 import com.phyothinzaraung.eng_mm_dictionary.repository.IDictionaryRepository
@@ -39,7 +39,7 @@ object RepositoryModule {
     @Singleton
     fun provideRecentRepository(
         recentDao: RecentDao
-    ): IRecentRepository{
+    ): IRecentRepository {
         return RecentRepository(recentDao)
     }
 }

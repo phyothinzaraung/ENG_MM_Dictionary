@@ -1,6 +1,6 @@
 package com.phyothinzaraung.eng_mm_dictionary
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.repository.IFavoriteRepository
 import com.phyothinzaraung.eng_mm_dictionary.util.DispatcherProvider
 import com.phyothinzaraung.eng_mm_dictionary.utils.TestDispatcherProvider
@@ -32,15 +32,15 @@ class FavoriteViewModelTest {
     private lateinit var dispatcherProvider: DispatcherProvider
 
     @Before
-    fun setup(){
+    fun setup() {
         MockitoAnnotations.openMocks(this)
         favoriteViewModel = FavoriteViewModel(repository)
         dispatcherProvider = TestDispatcherProvider()
-        Dispatchers.setMain(dispatcherProvider.main)
+        Dispatchers.setMain(dispatcherProvider.io)
     }
 
     @Test
-    fun testInsertFavorite() = runTest{
+    fun testInsertFavorite() = runTest {
         val favorite = Favorite(1, "test", "test")
 
         favoriteViewModel.insertFavorite(favorite)
@@ -69,7 +69,7 @@ class FavoriteViewModelTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         Dispatchers.resetMain()
     }
 }

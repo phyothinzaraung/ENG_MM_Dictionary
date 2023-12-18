@@ -18,24 +18,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Favorite
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FavoritesScreen(viewModel: FavoriteViewModel, navController: NavHostController) {
 
-    val favorites by viewModel.favorites.collectAsState(initial = emptyList())
-    LaunchedEffect(key1 = Unit){
-        viewModel.getFavorites()
-    }
+    val favorites by viewModel.favorites.collectAsStateWithLifecycle()
+//    LaunchedEffect(key1 = Unit) {
+//        viewModel.getFavorites()
+//    }
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController = navController, currentRoute = Screen.FavoritesScreen.route)
+            BottomNavigationBar(
+                navController = navController,
+                currentRoute = Screen.FavoritesScreen.route
+            )
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
                 text = "Favorites",
@@ -46,7 +50,7 @@ fun FavoritesScreen(viewModel: FavoriteViewModel, navController: NavHostControll
                 modifier = Modifier.padding(16.dp)
             )
 
-            if (favorites.isEmpty()){
+            if (favorites.isEmpty()) {
                 Text(
                     text = "No favorites available",
                     style = TextStyle(
@@ -56,10 +60,10 @@ fun FavoritesScreen(viewModel: FavoriteViewModel, navController: NavHostControll
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )
-            }else{
+            } else {
                 LazyColumn {
-                    items(favorites){item: Favorite ->
-                        FavoriteItem(favorite = item){
+                    items(favorites, key = { item -> item.id }) { item: Favorite ->
+                        FavoriteItem(favorite = item) {
                             navController.navigate("details/${it.stripword}")
                         }
                     }
@@ -76,6 +80,6 @@ fun FavoriteItem(favorite: Favorite, onItemClick: (Favorite) -> Unit) {
             text = it.stripword ?: "",
             modifier = Modifier.padding(start = 16.dp),
             fontSize = 16.sp
-            )
+        )
     }
 }

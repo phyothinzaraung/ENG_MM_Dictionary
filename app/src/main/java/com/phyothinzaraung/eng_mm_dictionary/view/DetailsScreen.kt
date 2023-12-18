@@ -34,11 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.phyothinzaraung.eng_mm_dictionary.R
-import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Recent
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.RecentViewModel
@@ -53,7 +54,7 @@ fun DetailsScreen(
     navController: NavController) {
 
     var dictionary by remember { mutableStateOf<Dictionary?>(null) }
-    val favorites by favoriteViewModel.favorites.collectAsState(initial = emptyList())
+    val favorites by favoriteViewModel.favorites.collectAsStateWithLifecycle()
     var isFavorite by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
     val context = LocalContext.current

@@ -38,16 +38,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import java.util.Locale
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostController) {
     var searchQuery by rememberSaveable { mutableStateOf("") }
-    val searchResults by viewModel.searchResults.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -55,7 +56,8 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data: Intent? = result.data
-                val speechResult: ArrayList<String>? = data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val speechResult: ArrayList<String>? =
+                    data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 // Assuming you want the first recognized phrase if available, otherwise default to "apple"
                 searchQuery = speechResult?.getOrNull(0) ?: "apple"
             }
@@ -63,7 +65,10 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
 
     fun launchSpeechToText() {
         val speechToTextIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        speechToTextIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        speechToTextIntent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM
+        )
         speechToTextIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         speechToTextIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!!!")
         resultLauncher.launch(speechToTextIntent)
@@ -72,17 +77,18 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
     val trailingIconView = @Composable {
         IconButton(
             onClick = {
-                      launchSpeechToText()
+                launchSpeechToText()
             },
         ) {
             Icon(
                 painter = painterResource(id = android.R.drawable.ic_btn_speak_now),
-                contentDescription = "speak")
+                contentDescription = "speak"
+            )
         }
     }
 
-    LaunchedEffect(key1 = searchQuery){
-        if(searchQuery.isNotBlank()) {
+    LaunchedEffect(key1 = searchQuery) {
+        if (searchQuery.isNotBlank()) {
             viewModel.searchWords(searchQuery)
         }
     }
@@ -110,7 +116,7 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (isLoading){
+            if (isLoading) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -120,10 +126,10 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                         modifier = Modifier.size(36.dp)
                     )
                 }
-            }else{
+            } else {
                 LazyColumn {
-                    items(searchResults) { dictionary ->
-                        DictionaryItem(dictionary = dictionary){
+                    items(searchResults, key = { item -> item.id }) { dictionary ->
+                        DictionaryItem(dictionary = dictionary) {
                             navController.navigate("details/${dictionary.stripWord}")
                         }
                     }
@@ -140,6 +146,6 @@ fun DictionaryItem(dictionary: Dictionary, onItemClick: (Dictionary) -> Unit) {
             text = it.stripWord ?: "",
             modifier = Modifier.padding(start = 16.dp),
             fontSize = 16.sp
-            )
+        )
     }
 }
