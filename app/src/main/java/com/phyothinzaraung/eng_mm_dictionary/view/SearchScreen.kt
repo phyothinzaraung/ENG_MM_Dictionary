@@ -3,7 +3,6 @@ package com.phyothinzaraung.eng_mm_dictionary.view
 import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,21 +34,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.phyothinzaraung.eng_mm_dictionary.data.model.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import java.util.Locale
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostController) {
-    var searchQuery by rememberSaveable { mutableStateOf("") }
-    val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
-    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
+    val (textFieldValue, setTextFieldValue) =
+        rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
+    val searchResults by viewModel.searchResults.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -60,7 +60,9 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                 val speechResult: ArrayList<String>? =
                     data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 // Assuming you want the first recognized phrase if available, otherwise default to "apple"
-                searchQuery = speechResult?.getOrNull(0) ?: "apple"
+                textFieldValue.apply {
+                    this.copy(speechResult?.getOrNull(0) ?: "apple")
+                }
             }
         }
 
@@ -88,13 +90,6 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
         }
     }
 
-    LaunchedEffect(key1 = searchQuery) {
-        Log.e(">>> ", searchQuery)
-        if (searchQuery.isNotBlank()) {
-            viewModel.searchWords(searchQuery)
-        }
-    }
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(navController = navController, currentRoute = currentRoute)
@@ -106,8 +101,11 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                 .padding(innerPadding)
         ) {
             OutlinedTextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
+                value = textFieldValue.text,
+                onValueChange = {
+                    setTextFieldValue(TextFieldValue(it))
+                    viewModel.searchWords(it)
+                },
                 label = { Text("Search") },
                 singleLine = true,
                 modifier = Modifier
@@ -130,7 +128,7 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                 }
             } else {
                 LazyColumn {
-                    items(searchResults, key = { item -> item.id }) { dictionary ->
+                    items(searchResults) { dictionary ->
                         DictionaryItem(dictionary = dictionary) {
                             navController.navigate("details/${dictionary.stripWord}")
                         }
