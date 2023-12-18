@@ -1,4 +1,4 @@
-package com.phyothinzaraung.eng_mm_dictionary.data
+package com.phyothinzaraung.eng_mm_dictionary.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

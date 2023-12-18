@@ -18,27 +18,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Recent
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.RecentViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecentScreen(viewModel: RecentViewModel, navController: NavHostController) {
 
-    val recent by viewModel.recent.collectAsState(emptyList())
-    LaunchedEffect(key1 = recent){
+    val recent by viewModel.recent.collectAsStateWithLifecycle(emptyList())
+    LaunchedEffect(key1 = recent) {
         viewModel.getRecent()
-        if (recent.size > 30){
+        if (recent.size > 30) {
             viewModel.clearAllRecent()
         }
     }
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController = navController, currentRoute = Screen.RecentScreen.route)
+            BottomNavigationBar(
+                navController = navController,
+                currentRoute = Screen.RecentScreen.route
+            )
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             Text(
                 text = "Recent",
@@ -49,7 +53,7 @@ fun RecentScreen(viewModel: RecentViewModel, navController: NavHostController) {
                 modifier = Modifier.padding(16.dp)
             )
 
-            if (recent.isEmpty()){
+            if (recent.isEmpty()) {
                 Text(
                     text = "No recent search available",
                     style = TextStyle(
@@ -59,10 +63,10 @@ fun RecentScreen(viewModel: RecentViewModel, navController: NavHostController) {
                     modifier = Modifier.padding(16.dp),
                     textAlign = TextAlign.Center
                 )
-            }else{
+            } else {
                 LazyColumn {
-                    items(recent){item: Recent ->
-                        RecentItem(recent = item){
+                    items(recent, key = { item -> item.id }) { item: Recent ->
+                        RecentItem(recent = item) {
                             navController.navigate("details/${it.stripword}")
                         }
                     }

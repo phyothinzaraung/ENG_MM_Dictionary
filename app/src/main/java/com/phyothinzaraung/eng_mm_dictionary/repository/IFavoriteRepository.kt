@@ -1,6 +1,6 @@
 package com.phyothinzaraung.eng_mm_dictionary.repository
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Favorite
 import kotlinx.coroutines.flow.Flow
 
 interface IFavoriteRepository {

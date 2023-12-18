@@ -2,11 +2,13 @@ package com.phyothinzaraung.eng_mm_dictionary.utils
 
 import com.phyothinzaraung.eng_mm_dictionary.util.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 
 class TestDispatcherProvider(
 ) : DispatcherProvider {
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val testDispatcher = UnconfinedTestDispatcher()
 
     override val main: CoroutineDispatcher
@@ -17,4 +19,8 @@ class TestDispatcherProvider(
 
     override val default: CoroutineDispatcher
         get() = testDispatcher
+
+    override val unconfined: CoroutineDispatcher
+        get() = testDispatcher
+
 }

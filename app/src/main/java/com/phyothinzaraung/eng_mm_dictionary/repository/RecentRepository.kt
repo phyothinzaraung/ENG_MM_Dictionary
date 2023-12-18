@@ -1,7 +1,7 @@
 package com.phyothinzaraung.eng_mm_dictionary.repository
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
-import com.phyothinzaraung.eng_mm_dictionary.data.RecentDao
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.dao.RecentDao
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

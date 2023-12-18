@@ -1,6 +1,6 @@
 package com.phyothinzaraung.eng_mm_dictionary
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Recent
 import com.phyothinzaraung.eng_mm_dictionary.repository.IRecentRepository
 import com.phyothinzaraung.eng_mm_dictionary.util.DispatcherProvider
 import com.phyothinzaraung.eng_mm_dictionary.utils.TestDispatcherProvider
@@ -32,11 +32,12 @@ class RecentViewModelTest {
     private lateinit var dispatcherProvider: DispatcherProvider
 
     @Before
-    fun setup(){
+    fun setup() {
         MockitoAnnotations.openMocks(this)
-        recentViewModel = RecentViewModel(repository)
         dispatcherProvider = TestDispatcherProvider()
-        Dispatchers.setMain(dispatcherProvider.main)
+        Dispatchers.setMain(dispatcherProvider.io)
+        recentViewModel = RecentViewModel(repository, dispatcherProvider)
+
     }
 
     @Test
@@ -64,7 +65,7 @@ class RecentViewModelTest {
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         Dispatchers.resetMain()
     }
 }

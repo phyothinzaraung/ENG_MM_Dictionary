@@ -1,6 +1,6 @@
 package com.phyothinzaraung.eng_mm_dictionary
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.repository.IDictionaryRepository
 import com.phyothinzaraung.eng_mm_dictionary.util.DispatcherProvider
 import com.phyothinzaraung.eng_mm_dictionary.utils.TestDispatcherProvider
@@ -32,22 +32,25 @@ class DictionaryViewModelTest {
     private lateinit var dispatcherProvider: DispatcherProvider
 
     @Before
-    fun setup(){
+    fun setup() {
         MockitoAnnotations.openMocks(this)
-        dictionaryViewModel = DictionaryViewModel(repository = dictionaryRepository)
         dispatcherProvider = TestDispatcherProvider()
-        Dispatchers.setMain(dispatcherProvider.main)
+        Dispatchers.setMain(dispatcherProvider.io)
+        dictionaryViewModel = DictionaryViewModel(
+            repository = dictionaryRepository,
+            dispatcherProvider = dispatcherProvider
+        )
     }
 
     @After
-    fun tearDown(){
+    fun tearDown() {
         Dispatchers.resetMain()
     }
 
     @Test
     fun testSearchWords() = runTest {
         val query = "test"
-        val testResults = listOf<Dictionary>(
+        val testResults = listOf(
             Dictionary(1, "test", "test", "test", "test", "test")
         )
 
@@ -62,7 +65,11 @@ class DictionaryViewModelTest {
     fun testGetDictionaryByStripWord() = runTest {
         val testWord = "test"
         val testDictionary = Dictionary(1, "test", "test", "test", "test", "test")
-        `when`(dictionaryRepository.getDictionaryByStripWord(testWord)).thenReturn(flowOf(testDictionary))
+        `when`(dictionaryRepository.getDictionaryByStripWord(testWord)).thenReturn(
+            flowOf(
+                testDictionary
+            )
+        )
         val result = dictionaryViewModel.getDictionaryByStripWord(testWord).first()
         assertEquals(testDictionary, result)
 

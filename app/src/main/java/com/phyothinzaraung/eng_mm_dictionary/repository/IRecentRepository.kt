@@ -1,6 +1,6 @@
 package com.phyothinzaraung.eng_mm_dictionary.repository
 
-import com.phyothinzaraung.eng_mm_dictionary.data.Recent
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Recent
 import kotlinx.coroutines.flow.Flow
 
 interface IRecentRepository {

@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
+
         setContent {
             ENG_MM_DictionaryTheme {
                 CustomAppTheme {
@@ -65,12 +65,13 @@ class MainActivity : ComponentActivity() {
                     dictionaryViewModel = dictionaryViewModel,
                     favoriteViewModel = favoriteViewModel,
                     recentViewModel = recentViewModel,
-                    navController = navController)
+                    navController = navController
+                )
             }
-            composable(Screen.FavoritesScreen.route){
-                FavoritesScreen(viewModel = favoriteViewModel,navController)
+            composable(Screen.FavoritesScreen.route) {
+                FavoritesScreen(viewModel = favoriteViewModel, navController)
             }
-            composable(Screen.RecentScreen.route){
+            composable(Screen.RecentScreen.route) {
                 RecentScreen(viewModel = recentViewModel, navController)
             }
         }
