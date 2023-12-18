@@ -34,14 +34,11 @@ class DictionaryViewModel @Inject constructor(
     private var textToSpeech: TextToSpeech? = null
 
     fun searchWords(query: String) {
-        Log.e(">>>> ", query)
         _isLoading.value = true
         viewModelScope.launch(dispatcherProvider.io) {
             repository.searchWords(query)
                 .collectLatest { results ->
                     _searchResults.value = results
-                    Log.e(">>>> RESULT ", "$query \t ${results.size}")
-
                     _isLoading.value = false
                 }
         }

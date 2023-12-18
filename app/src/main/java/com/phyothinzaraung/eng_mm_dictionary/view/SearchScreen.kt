@@ -3,6 +3,7 @@ package com.phyothinzaraung.eng_mm_dictionary.view
 import android.app.Activity
 import android.content.Intent
 import android.speech.RecognizerIntent
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,7 +27,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -37,19 +37,19 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.phyothinzaraung.eng_mm_dictionary.data.Dictionary
+import com.phyothinzaraung.eng_mm_dictionary.data.model.Dictionary
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.DictionaryViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostController) {
-    val (textFieldValue, setTextFieldValue) =
-        rememberSaveable(stateSaver = TextFieldValue.Saver) { mutableStateOf(TextFieldValue("")) }
-    val searchResults by viewModel.searchResults.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
+    var searchQuery by rememberSaveable { mutableStateOf("") }
+    val searchResults by viewModel.searchResults.collectAsStateWithLifecycle()
+    val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -60,9 +60,7 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                 val speechResult: ArrayList<String>? =
                     data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                 // Assuming you want the first recognized phrase if available, otherwise default to "apple"
-                textFieldValue.apply {
-                    this.copy(speechResult?.getOrNull(0) ?: "apple")
-                }
+                searchQuery = speechResult?.getOrNull(0) ?: "apple"
             }
         }
 
@@ -76,6 +74,12 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
         speechToTextIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Say Something!!!")
         resultLauncher.launch(speechToTextIntent)
     }
+    LaunchedEffect(key1 = searchQuery) {
+        if (searchQuery.isNotBlank()) {
+            viewModel.searchWords(searchQuery)
+        }
+    }
+
 
     val trailingIconView = @Composable {
         IconButton(
@@ -101,10 +105,9 @@ fun SearchScreen(viewModel: DictionaryViewModel, navController: NavHostControlle
                 .padding(innerPadding)
         ) {
             OutlinedTextField(
-                value = textFieldValue.text,
+                value = searchQuery,
                 onValueChange = {
-                    setTextFieldValue(TextFieldValue(it))
-                    viewModel.searchWords(it)
+                    searchQuery = it
                 },
                 label = { Text("Search") },
                 singleLine = true,
