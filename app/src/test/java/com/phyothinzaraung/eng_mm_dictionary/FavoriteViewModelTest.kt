@@ -1,8 +1,9 @@
-package com.phyothinzaraung.eng_mm_dictionary.utils
+package com.phyothinzaraung.eng_mm_dictionary
 
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.repository.IDictionaryRepository
+import com.phyothinzaraung.eng_mm_dictionary.repository.IFavoriteRepository
 import com.phyothinzaraung.eng_mm_dictionary.util.DispatcherProvider
+import com.phyothinzaraung.eng_mm_dictionary.utils.TestDispatcherProvider
 import com.phyothinzaraung.eng_mm_dictionary.viewmodel.FavoriteViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -26,14 +27,14 @@ import org.mockito.junit.MockitoJUnitRunner
 class FavoriteViewModelTest {
 
     @Mock
-    lateinit var dictionaryRepository: IDictionaryRepository
+    lateinit var repository: IFavoriteRepository
     private lateinit var favoriteViewModel: FavoriteViewModel
     private lateinit var dispatcherProvider: DispatcherProvider
 
     @Before
     fun setup(){
         MockitoAnnotations.openMocks(this)
-        favoriteViewModel = FavoriteViewModel(dictionaryRepository)
+        favoriteViewModel = FavoriteViewModel(repository)
         dispatcherProvider = TestDispatcherProvider()
         Dispatchers.setMain(dispatcherProvider.main)
     }
@@ -44,7 +45,7 @@ class FavoriteViewModelTest {
 
         favoriteViewModel.insertFavorite(favorite)
 
-        verify(dictionaryRepository).insertFavorite(favorite)
+        verify(repository).insertFavorite(favorite)
     }
 
     @Test
@@ -53,14 +54,14 @@ class FavoriteViewModelTest {
 
         favoriteViewModel.deleteFavorite(favorite)
 
-        verify(dictionaryRepository).deleteFavorite(favorite)
+        verify(repository).deleteFavorite(favorite)
     }
 
     @Test
     fun testGetFavorite() = runTest {
         val favorites = listOf<Favorite>(Favorite(1, "test", "test"))
 
-        `when`(dictionaryRepository.getFavorites()).thenReturn(flowOf(favorites))
+        `when`(repository.getFavorites()).thenReturn(flowOf(favorites))
         favoriteViewModel.getFavorites()
 
         val results = favoriteViewModel.favorites.value

@@ -3,7 +3,7 @@ package com.phyothinzaraung.eng_mm_dictionary.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phyothinzaraung.eng_mm_dictionary.data.Favorite
-import com.phyothinzaraung.eng_mm_dictionary.repository.IDictionaryRepository
+import com.phyothinzaraung.eng_mm_dictionary.repository.IFavoriteRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class FavoriteViewModel @Inject constructor(private val repository: IDictionaryRepository): ViewModel() {
+class FavoriteViewModel @Inject constructor(private val repository: IFavoriteRepository): ViewModel() {
     fun insertFavorite(favorite: Favorite){
         viewModelScope.launch {
             repository.insertFavorite(favorite)
